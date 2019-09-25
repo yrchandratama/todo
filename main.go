@@ -2,9 +2,11 @@ package main
 
 import (
 	"errors"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,7 +22,18 @@ type Todo struct {
 }
 
 func main() {
-	db, err = gorm.Open("mysql", "root:password@tcp(localhost:3306)/komodo")
+	err := godotenv.Load()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	USERNAME := os.Getenv("USERNAME")
+	PASSWORD := os.Getenv("PASSWORD")
+	DATABASE := os.Getenv("DATABASE")
+	HOST := os.Getenv("HOST")
+	PORT := os.Getenv("PORT")
+
+	db, err = gorm.Open("mysql", USERNAME+":"+PASSWORD+"@tcp("+HOST+":"+PORT+")/"+DATABASE)
 	if err != nil {
 		panic(err.Error())
 	}
